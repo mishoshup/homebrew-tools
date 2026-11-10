@@ -1,0 +1,32 @@
+name: autobump
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bump cask to the latest release
+        run: bash scripts/bump.sh
+
+      - name: Commit if the cask changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- Casks/disktree.rb; then
+            echo "no change"
+            exit 0
+          fi
+          version=$(sed -n 's/^  version "\(.*\)"$/\1/p' Casks/disktree.rb | head -1)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/disktree.rb
+          git commit -m "disktree ${version}"
+          git push
