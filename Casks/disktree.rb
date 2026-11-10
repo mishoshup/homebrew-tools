@@ -19,25 +19,19 @@ cask "disktree" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :big_sur"
+  depends_on macos: :big_sur
 
   app "disktree.app"
 
-  # Upstream ships unsigned, unnotarized builds; Homebrew marks them quarantined,
-  # so Gatekeeper would refuse the first launch of every fresh install/upgrade.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args:         ["-dr", "com.apple.quarantine", "#{appdir}/disktree.app"],
-                   print_stdout: false
+  # Upstream ships unsigned, unnotarized builds; Homebrew sets the quarantine
+  # flag on them, so Gatekeeper would refuse the first launch of every install
+  # and upgrade. Clear it here instead of asking the user to.
+  postflight_steps do
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/disktree.app"]
   end
 
   caveats <<~EOS
-    disktree releases are not signed or notarized. If Gatekeeper refuses the
-    first launch, clear the quarantine flag once:
-
-      xattr -dr com.apple.quarantine "/Applications/disktree.app"
-
-    For accurate scans give it Full Disk Access in
+    For accurate scans give disktree Full Disk Access in
     System Settings › Privacy & Security, then reopen the app.
   EOS
 end
