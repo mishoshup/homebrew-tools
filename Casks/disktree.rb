@@ -23,6 +23,14 @@ cask "disktree" do
 
   app "disktree.app"
 
+  # Upstream ships unsigned, unnotarized builds; Homebrew marks them quarantined,
+  # so Gatekeeper would refuse the first launch of every fresh install/upgrade.
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args:         ["-dr", "com.apple.quarantine", "#{appdir}/disktree.app"],
+                   print_stdout: false
+  end
+
   caveats <<~EOS
     disktree releases are not signed or notarized. If Gatekeeper refuses the
     first launch, clear the quarantine flag once:
