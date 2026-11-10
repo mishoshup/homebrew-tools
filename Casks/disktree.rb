@@ -1,12 +1,12 @@
 cask "disktree" do
-  version "0.10.1"
+  version "0.11.0"
 
   on_arm do
-    sha256 "90381628fdd0fc5c87aa32ba003ee85f2fb5eb496fab7aa1ee16428aaf7d9eca"
+    sha256 "942f2508fbbbd6901f796494492b16250d52227155b0ab59f6a5a446b033600b"
     url "https://github.com/tobi/disktree/releases/download/v#{version}/disktree-#{version}-aarch64-macos.zip"
   end
   on_intel do
-    sha256 "9955a0da39630296aef5709114979d79c8eb6f7e045bf67a056e490e1d3c4b96"
+    sha256 "16ddba6c3d983651cb6389d1c7fd6a070ba443aafcf03c2bc857e35e73b43f4d"
     url "https://github.com/tobi/disktree/releases/download/v#{version}/disktree-#{version}-x86_64-macos.zip"
   end
 
